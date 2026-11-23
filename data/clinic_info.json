@@ -1,0 +1,26 @@
+{
+  "_note": "DEMO DATA. Only the address and the ACL/MCL cost are real. The doctor must approve everything else. Keys starting with _ are hidden from the bot.",
+  "doctor_name": "Dr. Pushpak Samal",
+  "specialty": "Orthopedic specialist (spine, bone, joint and sports injuries)",
+  "address": "B13, HIG Duplex, BDA Colony, RBI Colony, Baramunda, Bhubaneswar, Odisha 751003",
+  "timings": "Monday to Sunday, 10 AM to 6 PM.",
+  "_hours": {
+    "open_days": [
+      "mon",
+      "tue",
+      "wed",
+      "thu",
+      "fri",
+      "sat",
+      "sun"
+    ],
+    "open_time": "00:00",
+    "close_time": "23:59",
+    "timezone": "Asia/Kolkata"
+  },
+  "_hours_note": "Structured copy of timings, used by code to check booking slots and transfers. Keep both in sync. The doctor must approve.",
+  "fees": {
+    "consultation": "Around 500 rupees (demo, please confirm)",
+    "follow_up_visit": "Around 300 rupees within 15 days of the first visit (demo, please confirm)"
+  }
+}

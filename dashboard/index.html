@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Receptionist Desk · Dr. Pushpak Samal</title>
+<style>
+  :root {
+    --bg: #f4f7fa;
+    --card: #ffffff;
+    --ink: #17212b;
+    --muted: #6b7a8a;
+    --line: #e4eaf0;
+    --brand: #0f9d8a;
+    --brand-dark: #0b7a6b;
+    --brand-soft: #e3f6f2;
+    --green: #16a34a;
+    --green-soft: #e4f7ea;
+    --red: #dc2626;
+    --red-soft: #fde8e8;
+    --amber: #d97706;
+    --amber-soft: #fff3de;
+    --blue: #2563eb;
+    --blue-soft: #e5edff;
+    --violet: #7c3aed;
+    --violet-soft: #efe8ff;
+    --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 4px 14px rgba(16, 24, 40, .06);
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* ── top bar ── */
+  .topbar {
+    position: sticky; top: 0; z-index: 20;
+    background: linear-gradient(120deg, #0b7a6b, #0f9d8a 60%, #14b8a6);
+    color: #fff;
+    box-shadow: 0 2px 12px rgba(11, 122, 107, .25);
+  }
+  .topbar-inner {
+    max-width: 1180px; margin: 0 auto; padding: 14px 20px;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .logo {
+    width: 42px; height: 42px; border-radius: 12px;
+    background: rgba(255, 255, 255, .18);
+    display: grid; place-items: center; font-size: 22px;
+  }
+  .titles h1 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: .2px; }
+  .titles p { margin: 2px 0 0; font-size: 12.5px; opacity: .85; }
+  .spacer { flex: 1; }
+  .conn { display: flex; align-items: center; gap: 8px; font-size: 12.5px; background: rgba(255,255,255,.15); padding: 7px 12px; border-radius: 999px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: #fbbf24; }
+  .dot.ok { background: #4ade80; box-shadow: 0 0 0 3px rgba(74, 222, 128, .3); }
+  .dot.bad { background: #f87171; }
+  .top-btn {
+    background: rgba(255, 255, 255, .18); color: #fff; border: 1px solid rgba(255, 255, 255, .35);
+    padding: 8px 14px; border-radius: 10px; font-size: 13px; font-weight: 600;
+  }
+  .top-btn:hover { background: rgba(255, 255, 255, .3); }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 22px 20px 60px; }
+
+  /* ── summary cards ── */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-bottom: 22px; }
+  .stat {
+    background: var(--card); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow);
+    display: flex; align-items: center; gap: 14px; border: 1px solid var(--line);
+  }
+  .stat .ico { width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center; font-size: 22px; }
+  .stat .num { font-size: 27px; font-weight: 800; line-height: 1; }
+  .stat .lbl { font-size: 12.5px; color: var(--muted); margin-top: 5px; }
+  .stat.pending .ico { background: var(--amber-soft); }
+  .stat.urgent .ico { background: var(--red-soft); }
+  .stat.approved .ico { background: var(--green-soft); }
+  .stat.calls .ico { background: var(--blue-soft); }
+
+  /* ── tabs + filters ── */
+  .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px; }
+  .tabs { display: flex; gap: 6px; background: #e6edf3; padding: 5px; border-radius: 12px; }
+  .tab {
+    border: 0; background: transparent; padding: 9px 16px; border-radius: 9px; font-size: 14px; font-weight: 600; color: var(--muted);
+  }
+  .tab.active { background: #fff; color: var(--brand-dark); box-shadow: 0 1px 4px rgba(16, 24, 40, .12); }
+  .tab .badge { background: var(--red); color: #fff; font-size: 11px; padding: 2px 7px; border-radius: 999px; margin-left: 6px; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    border: 1px solid var(--line); background: #fff; padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--muted);
+  }
+  .chip.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .search {
+    margin-left: auto; padding: 9px 14px; border: 1px solid var(--line); border-radius: 10px; font-size: 14px; min-width: 220px; background: #fff;
+  }
+  .search:focus, .field:focus { outline: 2px solid var(--brand-soft); border-color: var(--brand); }
+
+  /* ── callback cards ── */
+  .list { display: grid; gap: 14px; }
+  .card {
+    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--line);
+    padding: 18px 20px; border-left: 5px solid var(--line);
+  }
+  .card.u-emergency { border-left-color: var(--red); }
+  .card.u-urgent { border-left-color: var(--amber); }
+  .card.u-routine { border-left-color: var(--brand); }
+  .card.done-approved { opacity: .93; border-left-color: var(--green); }
+  .card.done-declined { opacity: .8; border-left-color: #9aa7b4; }
+
+  .card-head { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+  .avatar {
+    width: 46px; height: 46px; border-radius: 50%; background: var(--brand-soft); color: var(--brand-dark);
+    display: grid; place-items: center; font-weight: 800; font-size: 16px; flex: none;
+  }
+  .who { flex: 1; min-width: 200px; }
+  .who h3 { margin: 0; font-size: 17px; }
+  .phone { display: inline-flex; align-items: center; gap: 8px; margin-top: 3px; font-size: 14px; color: var(--blue); text-decoration: none; font-weight: 600; }
+  .phone:hover { text-decoration: underline; }
+  .copy { border: 0; background: var(--bg); border-radius: 6px; padding: 2px 8px; font-size: 11.5px; color: var(--muted); }
+  .meta { text-align: right; font-size: 12.5px; color: var(--muted); }
+
+  .pills { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 12px; }
+  .pill { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--bg); color: var(--muted); }
+  .pill.emergency { background: var(--red-soft); color: var(--red); }
+  .pill.urgent { background: var(--amber-soft); color: var(--amber); }
+  .pill.routine { background: var(--brand-soft); color: var(--brand-dark); }
+  .pill.reason { background: var(--violet-soft); color: var(--violet); }
+  .pill.new { background: var(--blue-soft); color: var(--blue); }
+  .pill.pending { background: var(--amber-soft); color: var(--amber); }
+  .pill.approved, .pill.confirmed { background: var(--green-soft); color: var(--green); }
+  .pill.declined, .pill.cancelled, .pill.no_answer, .pill.expired { background: #eceff3; color: #5b6876; }
+  .pill.calling { background: var(--blue-soft); color: var(--blue); }
+  .pill.reschedule, .pill.unconfirmed { background: var(--violet-soft); color: var(--violet); }
+
+  .slot {
+    margin-top: 12px; display: inline-flex; gap: 8px; align-items: center; background: var(--brand-soft);
+    color: var(--brand-dark); padding: 8px 12px; border-radius: 10px; font-weight: 700; font-size: 14px;
+  }
+  .issue { margin: 12px 0 0; font-size: 14.5px; line-height: 1.5; }
+  .more { display: none; margin-top: 12px; padding: 12px 14px; background: #f8fafc; border: 1px dashed var(--line); border-radius: 10px; font-size: 13.5px; line-height: 1.55; }
+  .more.open { display: block; }
+  .more dt { font-weight: 700; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .4px; margin-top: 8px; }
+  .more dt:first-child { margin-top: 0; }
+  .more dd { margin: 2px 0 0; }
+
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; align-items: center; }
+  .btn {
+    border: 1px solid transparent; padding: 9px 16px; border-radius: 10px; font-size: 14px; font-weight: 700; display: inline-flex; align-items: center; gap: 7px;
+    text-decoration: none; transition: transform .05s, filter .15s;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn:disabled { opacity: .55; cursor: wait; }
+  .btn.call { background: var(--blue-soft); color: var(--blue); }
+  .btn.approve { background: var(--green); color: #fff; }
+  .btn.decline { background: #fff; color: var(--red); border-color: #f3c0c0; }
+  .btn.ghost { background: #fff; border-color: var(--line); color: var(--muted); }
+  .btn.brand { background: var(--brand); color: #fff; }
+  .btn:hover { filter: brightness(.95); }
+  .btn.small { padding: 6px 12px; font-size: 13px; }
+
+  /* ── tables ── */
+  .table-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--line); overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); padding: 13px 16px; background: #f8fafc; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  td { padding: 13px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  tr:hover td { background: #fafcfd; }
+  td .sub { color: var(--muted); font-size: 12.5px; margin-top: 3px; }
+
+  .empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty .big { font-size: 46px; }
+  .empty h3 { margin: 10px 0 4px; color: var(--ink); }
+
+  /* ── login ── */
+  .overlay { position: fixed; inset: 0; background: rgba(15, 30, 45, .55); backdrop-filter: blur(4px); z-index: 50; display: none; place-items: center; padding: 20px; }
+  .overlay.show { display: grid; }
+  .login { background: #fff; width: 100%; max-width: 420px; border-radius: 18px; padding: 28px; box-shadow: 0 20px 60px rgba(0, 0, 0, .3); }
+  .login h2 { margin: 0 0 6px; }
+  .login p { margin: 0 0 18px; color: var(--muted); font-size: 14px; }
+  .field { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; font-size: 14.5px; margin-bottom: 12px; }
+  label { font-size: 12.5px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 5px; }
+  .err { color: var(--red); font-size: 13px; min-height: 18px; margin-bottom: 8px; }
+
+  /* ── toast ── */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(30px); opacity: 0;
+    background: #17212b; color: #fff; padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: 600;
+    transition: all .25s; z-index: 60; pointer-events: none; max-width: 90vw;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.bad { background: var(--red); }
+
+  .foot { text-align: center; color: var(--muted); font-size: 12.5px; margin-top: 30px; }
+
+  @media (max-width: 640px) {
+    .meta { text-align: left; width: 100%; }
+    .search { margin-left: 0; width: 100%; }
+    .topbar-inner { padding: 12px 14px; }
+    .wrap { padding: 16px 12px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">🦴</div>
+    <div class="titles">
+      <h1>Receptionist Desk</h1>
+      <p>Dr. Pushpak Samal · Orthopedic Clinic</p>
+    </div>
+    <div class="spacer"></div>
+    <div class="conn"><span class="dot" id="dot"></span><span id="connText">Not connected</span></div>
+    <button class="top-btn" id="refreshBtn">⟳ Refresh</button>
+    <button class="top-btn" id="logoutBtn">Sign out</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="stats">
+    <div class="stat pending"><div class="ico">⏳</div><div><div class="num" id="sPending">–</div><div class="lbl">Waiting for follow-up</div></div></div>
+    <div class="stat urgent"><div class="ico">🚨</div><div><div class="num" id="sUrgent">–</div><div class="lbl">Urgent / emergency</div></div></div>
+    <div class="stat approved"><div class="ico">✅</div><div><div class="num" id="sApproved">–</div><div class="lbl">Approved</div></div></div>
+    <div class="stat calls"><div class="ico">📞</div><div><div class="num" id="sCalls">–</div><div class="lbl">Inbound calls today</div></div></div>
+  </section>
+
+  <div class="toolbar">
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-tab="callbacks">To follow up <span class="badge" id="tabBadge" style="display:none"></span></button>
+      <button class="tab" data-tab="calls">Inbound calls</button>
+      <button class="tab" data-tab="reminders">Reminder calls</button>
+    </div>
+    <div class="chips" id="chips">
+      <button class="chip active" data-f="pending">Pending</button>
+      <button class="chip" data-f="approved">Approved</button>
+      <button class="chip" data-f="declined">Declined</button>
+      <button class="chip" data-f="">All</button>
+    </div>
+    <input class="search" id="search" type="search" placeholder="Search name, phone, issue…">
+  </div>
+
+  <div id="view"></div>
+
+  <p class="foot">Approve = you phoned the patient and the visit is fixed · Decline = cannot offer / patient declined · Nothing is ever deleted.<br>
+    Auto-refreshes every 20 seconds.</p>
+</main>
+
+<div class="overlay" id="loginOverlay">
+  <form class="login" id="loginForm">
+    <h2>Staff sign in</h2>
+    <p>Enter the clinic admin key to open the dashboard.</p>
+    <label for="keyInput">Admin key</label>
+    <input class="field" id="keyInput" type="password" autocomplete="current-password" placeholder="ADMIN_API_KEY" required>
+    <label for="apiInput">Server address</label>
+    <input class="field" id="apiInput" type="url" placeholder="https://xxxx.ngrok-free.app" required>
+    <div class="err" id="loginErr"></div>
+    <button class="btn brand" type="submit" style="width:100%;justify-content:center">Open dashboard</button>
+  </form>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // Used when the page is opened from a file. When served by the app, its own address is used.
+  const NGROK_URL = "https://0bf6-49-37-113-147.ngrok-free.app";
+  const REFRESH_MS = 20000;
+
+  const $ = (id) => document.getElementById(id);
+  const state = {
+    key: sessionStorage.getItem("adminKey") || "",
+    api: (localStorage.getItem("apiBase") || "").replace(/\/dashboard\/?$/, "") || (location.protocol.startsWith("http") ? location.origin : NGROK_URL),
+    tab: "callbacks",
+    filter: "pending",
+    search: "",
+    data: { callbacks: [], calls: [], reminders: [], overview: null },
+    timer: null,
+  };
+
+  // ── helpers ──
+  const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const initials = (name) => (name || "?").trim().split(/\s+/).slice(0, 2).map((p) => p[0]).join("").toUpperCase() || "?";
+  const label = (s) => String(s || "").replace(/_/g, " ").replace(/^\w/, (c) => c.toUpperCase());
+  const pad = (n) => String(n).padStart(2, "0");
+
+  function fmtTime(iso) {
+    if (!iso) return "–";
+    const d = new Date(iso);
+    return d.toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", hour12: true, timeZone: "Asia/Kolkata" });
+  }
+  function ago(iso) {
+    if (!iso) return "";
+    const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+    if (mins < 1) return "just now";
+    if (mins < 60) return mins + " min ago";
+    const h = Math.round(mins / 60);
+    if (h < 24) return h + " h ago";
+    return Math.round(h / 24) + " d ago";
+  }
+  function toast(msg, bad) {
+    const t = $("toast");
+    t.textContent = msg;
+    t.className = "toast show" + (bad ? " bad" : "");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => (t.className = "toast"), 2800);
+  }
+
+  async function api(path, opts = {}) {
+    const res = await fetch(state.api.replace(/\/$/, "") + path, {
+      ...opts,
+      headers: {
+        "X-API-Key": state.key,
+        "ngrok-skip-browser-warning": "1",
+        ...(opts.body ? { "Content-Type": "application/json" } : {}),
+      },
+    });
+    if (res.status === 401) { signOut("Wrong admin key."); throw new Error("401"); }
+    if (res.status === 503) throw new Error("Admin API is off (ADMIN_API_KEY is not set on the server).");
+    if (!res.ok) {
+      let detail = "";
+      try { detail = (await res.json()).detail; } catch (e) {}
+      throw new Error(detail || "Request failed (" + res.status + ")");
+    }
+    return res.json();
+  }
+
+  function setConn(ok, text) {
+    $("dot").className = "dot " + (ok ? "ok" : "bad");
+    $("connText").textContent = text;
+  }
+
+  // ── sign in / out ──
+  function showLogin(msg) {
+    $("apiInput").value = state.api;
+    $("loginErr").textContent = msg || "";
+    $("loginOverlay").classList.add("show");
+    setTimeout(() => $("keyInput").focus(), 50);
+  }
+  function signOut(msg) {
+    sessionStorage.removeItem("adminKey");
+    state.key = "";
+    clearInterval(state.timer);
+    setConn(false, "Signed out");
+    showLogin(msg);
+  }
+  $("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    state.key = $("keyInput").value.trim();
+    try {
+      state.api = new URL($("apiInput").value.trim()).origin;
+    } catch (err) {
+      $("loginErr").textContent = "Enter a full address, like https://xxxx.ngrok-free.app";
+      return;
+    }
+    try {
+      await api("/staff/overview");
+      sessionStorage.setItem("adminKey", state.key);
+      localStorage.setItem("apiBase", state.api);
+      $("loginOverlay").classList.remove("show");
+      $("keyInput").value = "";
+      start();
+    } catch (err) {
+      if (err.message !== "401") $("loginErr").textContent = "Could not connect: " + err.message;
+    }
+  });
+  $("logoutBtn").addEventListener("click", () => signOut(""));
+  $("refreshBtn").addEventListener("click", () => load(true));
+
+  // ── loading ──
+  async function load(manual) {
+    try {
+      const [overview, callbacks, calls, reminders] = await Promise.all([
+        api("/staff/overview"),
+        api("/staff/callbacks?limit=300"),
+        api("/staff/inquiries?limit=150"),
+        api("/appointments"),
+      ]);
+      state.data = { overview, callbacks, calls, reminders };
+      setConn(true, "Live · " + new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit" }));
+      renderStats();
+      render();
+      if (manual) toast("Refreshed");
+    } catch (err) {
+      if (err.message === "401") return;
+      setConn(false, "Connection problem");
+      if (manual) toast(err.message, true);
+    }
+  }
+  function start() {
+    load();
+    clearInterval(state.timer);
+    state.timer = setInterval(() => { if (!document.hidden) load(); }, REFRESH_MS);
+  }
+
+  function renderStats() {
+    const o = state.data.overview || {};
+    const c = o.callbacks || {};
+    $("sPending").textContent = c.pending || 0;
+    $("sUrgent").textContent = o.urgent_pending || 0;
+    $("sApproved").textContent = c.approved || 0;
+    $("sCalls").textContent = o.inbound_calls_today || 0;
+    const badge = $("tabBadge");
+    if (c.pending) { badge.textContent = c.pending; badge.style.display = ""; } else { badge.style.display = "none"; }
+  }
+
+  // ── render ──
+  function matches(obj, fields) {
+    const q = state.search.trim().toLowerCase();
+    if (!q) return true;
+    return fields.some((f) => String(obj[f] ?? "").toLowerCase().includes(q));
+  }
+  function emptyState(icon, title, text) {
+    return `<div class="empty"><div class="big">${icon}</div><h3>${esc(title)}</h3><div>${esc(text)}</div></div>`;
+  }
+
+  function render() {
+    $("chips").style.display = state.tab === "callbacks" ? "flex" : "none";
+    if (state.tab === "callbacks") renderCallbacks();
+    else if (state.tab === "calls") renderCalls();
+    else renderReminders();
+  }
+
+  function renderCallbacks() {
+    const rows = state.data.callbacks
+      .filter((r) => !state.filter || r.status === state.filter)
+      .filter((r) => matches(r, ["name", "phone", "issue", "reason", "preferred_slot", "summary"]));
+    if (!rows.length) {
+      $("view").innerHTML = emptyState("🎉", state.filter === "pending" ? "All caught up" : "Nothing here",
+        state.filter === "pending" ? "No patients are waiting for a follow-up call." : "No requests match this filter.");
+      return;
+    }
+    $("view").innerHTML = '<div class="list">' + rows.map(callbackCard).join("") + "</div>";
+  }
+
+  function callbackCard(r) {
+    const decided = r.status === "approved" || r.status === "declined";
+    const cls = "card u-" + esc(r.urgency || "routine") + (decided ? " done-" + r.status : "");
+    const details = [
+      ["Caller said", r.issue], ["Summary", r.summary], ["Symptoms", r.symptoms], ["Started", r.started_when],
+      ["Severity", r.severity], ["Earlier treatment", r.prior_treatment], ["Date of birth", r.date_of_birth],
+    ].filter((x) => x[1]);
+    const more = details.length
+      ? `<dl class="more" id="more-${r.id}">${details.map((d) => `<dt>${esc(d[0])}</dt><dd>${esc(d[1])}</dd>`).join("")}
+         ${r.recording_url ? `<dt>Recording</dt><dd><a href="${esc(r.recording_url)}" target="_blank" rel="noopener">▶ Listen to the call</a></dd>` : ""}</dl>`
+      : "";
+    const buttons = decided
+      ? `<button class="btn ghost" data-act="reopen" data-id="${r.id}">↺ Reopen</button>`
+      : `<button class="btn approve" data-act="approved" data-id="${r.id}">✓ Approve</button>
+         <button class="btn decline" data-act="declined" data-id="${r.id}">✕ Decline</button>`;
+    return `
+      <article class="${cls}">
+        <div class="card-head">
+          <div class="avatar">${esc(initials(r.name))}</div>
+          <div class="who">
+            <h3>${esc(r.name || "Unknown caller")}</h3>
+            <a class="phone" href="tel:${esc(r.phone)}">📞 ${esc(r.phone)}</a>
+            <button class="copy" data-copy="${esc(r.phone)}">Copy</button>
+          </div>
+          <div class="meta">${esc(fmtTime(r.created_at))}<br>${esc(ago(r.created_at))}</div>
+        </div>
+        <div class="pills">
+          <span class="pill ${esc(r.urgency)}">${esc(label(r.urgency))}</span>
+          ${r.reason ? `<span class="pill reason">${esc(label(r.reason))}</span>` : ""}
+          ${r.patient_type ? `<span class="pill new">${esc(label(r.patient_type))} patient</span>` : ""}
+          <span class="pill ${esc(r.status)}">${esc(label(r.status))}</span>
+        </div>
+        ${r.preferred_slot ? `<div class="slot">🗓 Wants: ${esc(r.preferred_slot)}</div>` : ""}
+        <p class="issue">${esc(r.issue)}</p>
+        ${more}
+        <div class="actions">
+          <a class="btn call" href="tel:${esc(r.phone)}">📞 Call patient</a>
+          ${buttons}
+          ${details.length ? `<button class="btn ghost small" data-act="more" data-id="${r.id}">Details</button>` : ""}
+        </div>
+      </article>`;
+  }
+
+  function renderCalls() {
+    const rows = state.data.calls.filter((r) => matches(r, ["name", "phone", "condition", "summary", "outcome"]));
+    if (!rows.length) { $("view").innerHTML = emptyState("📭", "No inbound calls yet", "Calls will appear here as soon as patients phone the clinic."); return; }
+    $("view").innerHTML = `<div class="table-card"><table>
+      <thead><tr><th>When</th><th>Caller</th><th>Reason for calling</th><th>Wants</th><th>Outcome</th><th></th></tr></thead>
+      <tbody>${rows.map((r) => `
+        <tr>
+          <td>${esc(fmtTime(r.call_started_at))}<div class="sub">${esc(ago(r.call_started_at))}</div></td>
+          <td><b>${esc(r.name || "Unknown")}</b><div class="sub"><a class="phone" href="tel:${esc(r.phone)}">${esc(r.phone)}</a></div>
+              ${r.patient_type ? `<div class="sub">${esc(label(r.patient_type))} patient</div>` : ""}</td>
+          <td>${esc(r.condition || r.summary || "–")}${r.severity ? `<div class="sub">Severity: ${esc(r.severity)}</div>` : ""}</td>
+          <td>${r.wants_appointment ? `<span class="pill reason">Appointment</span>` : ""}
+              ${r.wants_receptionist ? `<span class="pill new">Receptionist</span>` : ""}
+              ${r.preferred_slot_text || r.preferred_date ? `<div class="sub">🗓 ${esc(r.preferred_slot_text || (r.preferred_date + " " + (r.preferred_time || "")))}</div>` : ""}</td>
+          <td><span class="pill ${esc(r.outcome === "completed" ? "approved" : r.outcome === "abandoned" ? "declined" : "pending")}">${esc(label(r.outcome))}</span>
+              ${r.transfer_status && r.transfer_status !== "none" ? `<div class="sub">Transfer: ${esc(r.transfer_status)}</div>` : ""}</td>
+          <td>${r.recording_url ? `<a href="${esc(r.recording_url)}" target="_blank" rel="noopener">▶ Listen</a>` : ""}</td>
+        </tr>`).join("")}</tbody></table></div>`;
+  }
+
+  function renderReminders() {
+    const rows = state.data.reminders.filter((r) => matches(r, ["name", "phone", "status", "feeling_note", "summary"]));
+    if (!rows.length) { $("view").innerHTML = emptyState("🗓", "No reminder appointments", "Import an Excel sheet to schedule reminder calls."); return; }
+    $("view").innerHTML = `<div class="table-card"><table>
+      <thead><tr><th>Patient</th><th>Appointment</th><th>Status</th><th>Attempts</th><th>What the patient said</th><th></th></tr></thead>
+      <tbody>${rows.map((r) => `
+        <tr>
+          <td><b>${esc(r.name)}</b><div class="sub"><a class="phone" href="tel:${esc(r.phone)}">${esc(r.phone)}</a></div></td>
+          <td>${esc(fmtTime(r.appointment_at))}</td>
+          <td><span class="pill ${esc(r.status)}">${esc(label(r.status))}</span></td>
+          <td>${esc(r.attempts)}</td>
+          <td>${esc(r.feeling_note || r.summary || "–")}</td>
+          <td><button class="btn brand small" data-act="callnow" data-id="${r.id}" ${r.status === "calling" ? "disabled" : ""}>📤 Call now</button></td>
+        </tr>`).join("")}</tbody></table></div>`;
+  }
+
+  // ── actions ──
+  async function setStatus(id, status, button) {
+    button.disabled = true;
+    try {
+      const row = await api(`/staff/callbacks/${id}/status`, { method: "POST", body: JSON.stringify({ status }) });
+      const i = state.data.callbacks.findIndex((c) => c.id === id);
+      if (i >= 0) state.data.callbacks[i] = row;
+      toast(status === "approved" ? "Approved ✓" : status === "declined" ? "Declined" : "Moved back to pending");
+      await load();
+    } catch (err) {
+      toast(err.message, true);
+      button.disabled = false;
+    }
+  }
+
+  async function callNow(id, button) {
+    if (!confirm("Place the reminder call to this patient right now?")) return;
+    button.disabled = true;
+    try {
+      const res = await api(`/appointments/${id}/call-now`, { method: "POST" });
+      toast(res.call_placed ? "Calling the patient…" : "Call could not be placed", !res.call_placed);
+      setTimeout(load, 1500);
+    } catch (err) {
+      toast(err.message, true);
+      button.disabled = false;
+    }
+  }
+
+  document.addEventListener("click", (e) => {
+    const copy = e.target.closest("[data-copy]");
+    if (copy) { navigator.clipboard?.writeText(copy.dataset.copy); toast("Number copied"); return; }
+    const btn = e.target.closest("[data-act]");
+    if (!btn) return;
+    const id = Number(btn.dataset.id);
+    const act = btn.dataset.act;
+    if (act === "more") { $("more-" + id)?.classList.toggle("open"); return; }
+    if (act === "approved" || act === "declined") return setStatus(id, act, btn);
+    if (act === "reopen") return setStatus(id, "pending", btn);
+    if (act === "callnow") return callNow(id, btn);
+  });
+
+  $("tabs").addEventListener("click", (e) => {
+    const t = e.target.closest(".tab");
+    if (!t) return;
+    document.querySelectorAll(".tab").forEach((x) => x.classList.toggle("active", x === t));
+    state.tab = t.dataset.tab;
+    render();
+  });
+  $("chips").addEventListener("click", (e) => {
+    const c = e.target.closest(".chip");
+    if (!c) return;
+    document.querySelectorAll(".chip").forEach((x) => x.classList.toggle("active", x === c));
+    state.filter = c.dataset.f;
+    render();
+  });
+  $("search").addEventListener("input", (e) => { state.search = e.target.value; render(); });
+
+  // ── boot ──
+  if (state.key) start(); else showLogin("");
+</script>
+</body>
+</html>

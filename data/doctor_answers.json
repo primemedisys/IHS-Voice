@@ -1,0 +1,77 @@
+{
+  "_note": "EDITED BY THE DOCTOR. The bot tells callers ONLY what is written here about injuries, procedures and common questions. Write in English; the bot says the same meaning in Hindi or Odia. Keys starting with _ are hidden from the bot. DEMO TEXT: the doctor must review and approve every answer before real use.",
+  "injury_guidance": [
+    {
+      "topic": "Knee ligament injury (ACL / MCL)",
+      "keywords": [
+        "acl",
+        "mcl",
+        "knee",
+        "ligament"
+      ],
+      "answer": "The doctor will examine the knee and advise the right treatment."
+    },
+    {
+      "topic": "Back or spine pain",
+      "keywords": [
+        "back pain",
+        "spine",
+        "slip disc",
+        "disc",
+        "neck pain"
+      ],
+      "answer": "The doctor will examine you and advise after seeing your reports."
+    },
+    {
+      "topic": "Fracture or bone injury",
+      "keywords": [
+        "fracture",
+        "broken bone",
+        "bone",
+        "x-ray"
+      ],
+      "answer": "Please bring your X-rays and reports. The doctor will examine you and advise."
+    }
+  ],
+  "procedures": [
+    {
+      "name": "ACL and MCL knee ligament surgery",
+      "usual_cost": "Usually around 2.5 lakh rupees",
+      "note": "The final cost depends on the case, and the doctor confirms it after examining the patient."
+    },
+    {
+      "name": "Other surgeries",
+      "usual_cost": "The cost depends on the case.",
+      "note": "The doctor explains it after examination."
+    }
+  ],
+  "faqs": [
+    {
+      "q": "Do I need to bring old reports?",
+      "a": "Yes, please bring all previous reports, X-rays and scans, and any current medicine list."
+    },
+    {
+      "q": "How do I book an appointment?",
+      "a": "I can note your details, and the clinic team will call you back to confirm a time."
+    },
+    {
+      "q": "Do I need an appointment before visiting?",
+      "a": "An appointment is recommended so that you don't have to wait. The clinic team can confirm a slot for you."
+    },
+    {
+      "q": "Where is the clinic?",
+      "a": "It is at B13, HIG Duplex, BDA Colony, RBI Colony, Baramunda, Bhubaneswar."
+    },
+    {
+      "q": "Does the clinic accept insurance?",
+      "a": "I don't have that information, so I'll ask the clinic team to call you with the details."
+    }
+  ],
+  "do_not_answer": [
+    "medicine names or doses",
+    "diagnosis",
+    "whether surgery is needed",
+    "exercise or home treatment"
+  ],
+  "fallback": "The doctor will advise on that after examining you. I will note your question for the clinic team."
+}
